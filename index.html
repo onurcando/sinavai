@@ -506,10 +506,11 @@
     <h2>Ücretsiz Başla, Fark Yarat</h2>
     <p>180.000+ öğrenci zaten SınavAI ile hazırlanıyor. Sen ne bekliyorsun?</p>
     <div class="cta-input-row">
-      <input type="email" class="cta-input" placeholder="E-posta adresin">
-      <button class="cta-submit">Ücretsiz Kaydol</button>
+      <input type="email" class="cta-input" id="cta-email" placeholder="E-posta adresin">
+      <button class="cta-submit" onclick="subscribe('cta-email','cta-msg')">Ücretsiz Kaydol</button>
     </div>
-    <div style="margin-top:1rem;font-size:0.8rem;opacity:0.7">Kredi kartı gerekmez · Reklam yok · Sonsuza kadar ücretsiz</div>
+    <div id="cta-msg" style="margin-top:0.8rem;font-size:0.85rem;min-height:1.2rem"></div>
+    <div style="margin-top:0.4rem;font-size:0.8rem;opacity:0.7">Kredi kartı gerekmez · Reklam yok · Sonsuza kadar ücretsiz</div>
   </div>
 </div>
 
@@ -1282,6 +1283,19 @@ function startQuizTimer() {
   }, 1000);
 }
 function scrollTo(id) { document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+
+async function subscribe(inputId, msgId) {
+  const email = document.getElementById(inputId).value.trim();
+  const msgEl = document.getElementById(msgId);
+  if (!email) { msgEl.textContent = '❗ E-posta adresinizi girin.'; msgEl.style.color='#fca5a5'; return; }
+  msgEl.textContent = '⏳ Kaydediliyor...'; msgEl.style.color='#94a3b8';
+  try {
+    const res = await fetch('/api/subscribe', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email}) });
+    const data = await res.json();
+    if (data.success) { msgEl.textContent = data.message; msgEl.style.color='#4ade80'; document.getElementById(inputId).value=''; }
+    else { msgEl.textContent = data.error || 'Bir hata oluştu.'; msgEl.style.color='#fca5a5'; }
+  } catch { msgEl.textContent = 'Bağlantı hatası, tekrar deneyin.'; msgEl.style.color='#fca5a5'; }
+}
 
 renderSubjects('kpss');
 renderLeaderboard();
