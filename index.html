@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SınavAI – KPSS, YKS, ALES Yapay Zeka Destekli Ücretsiz Hazırlık</title>
+<meta name="description" content="KPSS, YKS, ALES, DGS sınavlarına yapay zeka destekli ücretsiz hazırlan. 50.000+ soru, kişisel çalışma planı, anlık analiz. Türkiye'nin en akıllı sınav hazırlık platformu.">
+<meta name="keywords" content="KPSS hazırlık, YKS hazırlık, ALES hazırlık, ücretsiz soru bankası, KPSS soru çöz, yapay zeka sınav hazırlık, KPSS 2026">
+<meta property="og:title" content="SınavAI – Yapay Zeka ile Sınav Hazırlığı">
+<meta property="og:description" content="KPSS, YKS, ALES için ücretsiz AI destekli platform. Zayıf konularını bul, hedefine ulaş.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --secondary: #06b6d4;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --dark: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --bg: #0f172a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  a { text-decoration: none; color: inherit; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(15,23,42,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+  .logo-dot { width: 10px; height: 10px; background: var(--secondary); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a { color: var(--muted); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { background: var(--primary); color: white; padding: 0.5rem 1.2rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: background 0.2s; }
+  .nav-cta:hover { background: var(--primary-dark); }
+
+  /* HERO */
+  .hero {
+    max-width: 1200px; margin: 0 auto; padding: 6rem 1.5rem 4rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);
+    color: var(--primary); padding: 0.3rem 0.8rem; border-radius: 20px;
+    font-size: 0.8rem; font-weight: 600; margin-bottom: 1.5rem;
+  }
+  .hero h1 { font-size: 3rem; font-weight: 800; line-height: 1.15; margin-bottom: 1.2rem; }
+  .hero h1 span { color: var(--primary); }
+  .hero p { color: var(--muted); font-size: 1.1rem; margin-bottom: 2rem; }
+  .hero-stats { display: flex; gap: 2rem; margin-bottom: 2rem; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
+  .stat-label { font-size: 0.75rem; color: var(--muted); }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary { background: var(--primary); color: white; padding: 0.85rem 1.8rem; border-radius: 10px; font-weight: 700; font-size: 1rem; transition: all 0.2s; border: none; cursor: pointer; }
+  .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--text); padding: 0.85rem 1.8rem; border-radius: 10px; font-weight: 600; font-size: 1rem; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+  /* SORU DEMO */
+  .demo-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 1.5rem; position: relative; overflow: hidden;
+  }
+  .demo-card::before {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 120px; height: 120px; background: var(--primary); opacity: 0.1; border-radius: 50%;
+  }
+  .demo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .demo-tag { background: rgba(16,185,129,0.15); color: var(--success); padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+  .demo-timer { color: var(--warning); font-weight: 700; font-size: 0.9rem; }
+  .demo-question { font-size: 0.95rem; margin-bottom: 1.2rem; line-height: 1.6; }
+  .demo-options { display: flex; flex-direction: column; gap: 0.6rem; }
+  .option {
+    padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid var(--border);
+    font-size: 0.9rem; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .option:hover { border-color: var(--primary); background: rgba(99,102,241,0.1); }
+  .option.correct { border-color: var(--success); background: rgba(16,185,129,0.15); }
+  .option.wrong { border-color: var(--danger); background: rgba(239,68,68,0.1); }
+  .option-letter { width: 24px; height: 24px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+  .ai-hint { margin-top: 1rem; padding: 0.8rem; background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.3); border-radius: 8px; font-size: 0.82rem; color: var(--secondary); }
+  .ai-hint strong { display: block; margin-bottom: 0.2rem; }
+
+  /* STATS BAR */
+  .stats-bar {
+    background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 2rem 1.5rem;
+  }
+  .stats-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1.5rem; }
+  .stats-item { text-align: center; }
+  .stats-num { font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .stats-label { color: var(--muted); font-size: 0.85rem; margin-top: 0.2rem; }
+
+  /* SUBJECTS GRID */
+  .section { max-width: 1200px; margin: 5rem auto; padding: 0 1.5rem; }
+  .section-header { text-align: center; margin-bottom: 3rem; }
+  .section-title { font-size: 2rem; font-weight: 800; margin-bottom: 0.8rem; }
+  .section-subtitle { color: var(--muted); font-size: 1rem; }
+
+  .exam-tabs { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+  .tab-btn { padding: 0.5rem 1.2rem; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .tab-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+  .subjects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+  .subject-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.2rem; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .subject-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.15); }
+  .subject-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+  .subject-info { flex: 1; }
+  .subject-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; }
+  .subject-count { color: var(--muted); font-size: 0.78rem; }
+  .subject-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 0.6rem; overflow: hidden; }
+  .subject-progress { height: 100%; background: var(--primary); border-radius: 2px; transition: width 1s; }
+
+  /* AI FEATURE */
+  .ai-feature {
+    background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(6,182,212,0.1));
+    border: 1px solid rgba(99,102,241,0.3); border-radius: 20px;
+    padding: 3rem; text-align: center; margin: 3rem 0;
+  }
+  .ai-feature h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; }
+  .ai-feature p { color: var(--muted); max-width: 600px; margin: 0 auto 2rem; }
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+  .feature-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; }
+  .feature-item-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+  .feature-item h4 { font-weight: 700; margin-bottom: 0.4rem; font-size: 0.95rem; }
+  .feature-item p { color: var(--muted); font-size: 0.82rem; }
+
+  /* LEADERBOARD */
+  .leaderboard { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .lb-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .lb-header h4 { font-weight: 700; }
+  .lb-row { padding: 0.9rem 1.5rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; }
+  .lb-row:hover { background: rgba(255,255,255,0.03); }
+  .lb-row:last-child { border-bottom: none; }
+  .lb-rank { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; }
+  .rank-1 { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; }
+  .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); color: #000; }
+  .rank-3 { background: linear-gradient(135deg, #cd7c3b, #a85f2a); color: #fff; }
+  .rank-n { background: var(--border); color: var(--text); }
+  .lb-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+  .lb-name { flex: 1; font-weight: 600; font-size: 0.9rem; }
+  .lb-city { color: var(--muted); font-size: 0.78rem; }
+  .lb-score { font-weight: 800; color: var(--primary); }
+  .lb-streak { display: flex; align-items: center; gap: 3px; color: var(--warning); font-size: 0.78rem; font-weight: 600; }
+
+  /* CTA */
+  .cta-section {
+    max-width: 800px; margin: 5rem auto; padding: 0 1.5rem; text-align: center;
+  }
+  .cta-card {
+    background: linear-gradient(135deg, var(--primary-dark), #7c3aed);
+    border-radius: 20px; padding: 3rem 2rem;
+  }
+  .cta-card h2 { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+  .cta-card p { opacity: 0.85; margin-bottom: 1.5rem; }
+  .cta-input-row { display: flex; gap: 0.8rem; max-width: 480px; margin: 0 auto; }
+  .cta-input { flex: 1; padding: 0.85rem 1rem; border-radius: 10px; border: none; background: rgba(255,255,255,0.15); color: white; font-size: 0.95rem; }
+  .cta-input::placeholder { color: rgba(255,255,255,0.6); }
+  .cta-submit { background: white; color: var(--primary-dark); padding: 0.85rem 1.5rem; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+  .cta-submit:hover { transform: scale(1.03); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border); padding: 2rem 1.5rem;
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: gap;
+  }
+  .footer-logo { font-weight: 800; color: var(--primary); }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { color: var(--muted); font-size: 0.85rem; }
+
+  /* QUIZ MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; max-width: 540px; width: 90%; position: relative; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; }
+  .modal h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 1.5rem; }
+  .quiz-progress { height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 1.5rem; overflow: hidden; }
+  .quiz-progress-bar { height: 100%; background: var(--primary); border-radius: 3px; transition: width 0.4s; }
+  .quiz-info { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.82rem; margin-bottom: 1rem; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 1.5rem 2rem; }
+    .hero h1 { font-size: 2rem; }
+    .nav-links { display: none; }
+    .demo-card { order: -1; }
+    .hero-stats { gap: 1rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .cta-input-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    SınavAI
+  </div>
+  <div class="nav-links">
+    <a href="#sinav-sec">Sınavlar</a>
+    <a href="#sorular">Sorular</a>
+    <a href="#skor">Sıralama</a>
+    <a href="#nasil">Nasıl Çalışır</a>
+  </div>
+  <a href="#kayit" class="nav-cta">Ücretsiz Başla</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🤖 Yapay Zeka Destekli · %100 Ücretsiz</div>
+    <h1>KPSS'ye <span>Akıllıca</span> Hazırlan</h1>
+    <p>Yapay zeka zayıf konularını tespit eder, sana özel çalışma planı oluşturur. KPSS, YKS, ALES, DGS — hepsi bir arada.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">50K+</div><div class="stat-label">Soru</div></div>
+      <div class="stat"><div class="stat-num">180K+</div><div class="stat-label">Kullanıcı</div></div>
+      <div class="stat"><div class="stat-num">%94</div><div class="stat-label">Memnuniyet</div></div>
+    </div>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="openQuiz()">🚀 Hemen Soru Çöz</button>
+      <button class="btn-outline" onclick="scrollTo('sinav-sec')">Sınavlara Bak →</button>
+    </div>
+  </div>
+  <div class="demo-card" id="demo-card">
+    <div class="demo-header">
+      <div class="demo-tag">✦ KPSS Türkçe</div>
+      <div class="demo-timer" id="timer">⏱ 01:30</div>
+    </div>
+    <div class="demo-question" id="question-text">
+      Aşağıdaki cümlelerin hangisinde altı çizili sözcük yüklem görevindedir?
+    </div>
+    <div class="demo-options" id="options">
+      <div class="option" onclick="selectOption(this, false)"><div class="option-letter">A</div> Yarın gelen misafirleri bekliyoruz.</div>
+      <div class="option" onclick="selectOption(this, false)"><div class="option-letter">B</div> Sabahın erken saatlerinde yola çıktık.</div>
+      <div class="option" onclick="selectOption(this, true)"><div class="option-letter">C</div> Bu kitap çok <u>ilginç</u>.</div>
+      <div class="option" onclick="selectOption(this, false)"><div class="option-letter">D</div> Uzun yolculuktan dönen ekip yorgundu.</div>
+      <div class="option" onclick="selectOption(this, false)"><div class="option-letter">E</div> Çocuklar bahçede top oynuyor.</div>
+    </div>
+    <div class="ai-hint" id="ai-hint" style="display:none">
+      <strong>🤖 AI Açıklaması:</strong>
+      Yüklem, cümlede işi, oluşu veya durumu bildiren temel ögedir. "İlginç" sözcüğü bu cümlede yüklem işlevi görür çünkü "ek fiil" alarak (ilginç<b>tir</b>) öznenin durumunu bildirir.
+    </div>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stats-item"><div class="stats-num">50,000+</div><div class="stats-label">Özgün Soru</div></div>
+    <div class="stats-item"><div class="stats-num">24</div><div class="stats-label">Konu Kategorisi</div></div>
+    <div class="stats-item"><div class="stats-num">180,000+</div><div class="stats-label">Kayıtlı Kullanıcı</div></div>
+    <div class="stats-item"><div class="stats-num">4.8★</div><div class="stats-label">Kullanıcı Puanı</div></div>
+    <div class="stats-item"><div class="stats-num">%100</div><div class="stats-label">Ücretsiz</div></div>
+  </div>
+</div>
+
+<!-- SINAV SEÇ -->
+<div class="section" id="sinav-sec">
+  <div class="section-header">
+    <div class="hero-badge" style="margin:0 auto 1rem">📚 Sınav Kategorileri</div>
+    <div class="section-title">Hangi Sınav İçin Hazırlanıyorsun?</div>
+    <div class="section-subtitle">Her sınav için binlerce soru, çözümlü deneme ve kişisel analiz</div>
+  </div>
+  <div class="exam-tabs" id="exam-tabs">
+    <button class="tab-btn active" onclick="showExam('kpss', this)">KPSS</button>
+    <button class="tab-btn" onclick="showExam('yks', this)">YKS / TYT</button>
+    <button class="tab-btn" onclick="showExam('ales', this)">ALES</button>
+    <button class="tab-btn" onclick="showExam('dgs', this)">DGS</button>
+    <button class="tab-btn" onclick="showExam('yds', this)">YDS / YÖKDİL</button>
+  </div>
+  <div class="subjects-grid" id="subjects-grid"></div>
+</div>
+
+<!-- AI FEATURES -->
+<div class="section" id="nasil">
+  <div class="ai-feature">
+    <div class="hero-badge" style="margin:0 auto 1rem">🧠 Yapay Zeka Motoru</div>
+    <h3>AI Seni Analiz Eder, Sen Odaklanırsın</h3>
+    <p>Hangi konularda zayıf olduğunu, ne kadar süre çalışman gerektiğini ve hangi soruları önce çözmen gerektiğini yapay zekamız belirler.</p>
+    <div class="feature-grid">
+      <div class="feature-item">
+        <div class="feature-item-icon">🎯</div>
+        <h4>Zayıf Konu Tespiti</h4>
+        <p>Hata örüntülerini analiz ederek hangi konuya daha çok çalışman gerektiğini söyler.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon">📅</div>
+        <h4>Kişisel Çalışma Planı</h4>
+        <p>Sınav tarihine ve boş zamanına göre günlük çalışma programı oluşturur.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon">💡</div>
+        <h4>Anlık Açıklama</h4>
+        <p>Her yanlış soruyu anlamana yardımcı olacak detaylı AI açıklaması alırsın.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon">📈</div>
+        <h4>İlerleme Takibi</h4>
+        <p>Günlük, haftalık ve aylık gelişimini görsel grafiklerle takip et.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon">🔥</div>
+        <h4>Seri (Streak) Sistemi</h4>
+        <p>Günlük çalışma serilerini kır ve arkadaşlarınla yarış. Motivasyonu canlı tut.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon">🏆</div>
+        <h4>Sınav Simülasyonu</h4>
+        <p>Gerçek sınav koşullarında deneme sınavı çöz, sonuçlarını sırala ve paylaş.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div class="section" id="skor">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:start;">
+    <div>
+      <div class="section-header" style="text-align:left; margin-bottom:1.5rem">
+        <div class="section-title">Bu Haftanın Liderleri</div>
+        <div class="section-subtitle">En çok soru çözen kullanıcılar sıralamada yer alıyor</div>
+      </div>
+      <div class="leaderboard">
+        <div class="lb-header">
+          <h4>🏆 Haftalık Sıralama</h4>
+          <span style="color:var(--muted);font-size:0.8rem">KPSS · Tüm Türkiye</span>
+        </div>
+        <div id="leaderboard-rows"></div>
+      </div>
+    </div>
+    <div>
+      <div class="section-header" style="text-align:left; margin-bottom:1.5rem">
+        <div class="section-title">Günlük Hedefin</div>
+        <div class="section-subtitle">Bugün kaç soru çözdün?</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem">
+        <div style="text-align:center;margin-bottom:1.5rem">
+          <div style="font-size:3.5rem;font-weight:900;color:var(--primary)" id="today-count">0</div>
+          <div style="color:var(--muted);font-size:0.85rem">/ 30 hedef soru</div>
+        </div>
+        <div style="height:12px;background:var(--border);border-radius:6px;overflow:hidden;margin-bottom:1.2rem">
+          <div id="today-bar" style="height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:6px;width:0%;transition:width 1s"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:1.5rem">
+          <div style="text-align:center"><div style="font-weight:800;color:var(--warning)" id="streak-count">0</div><div style="color:var(--muted);font-size:0.75rem">Günlük Seri 🔥</div></div>
+          <div style="text-align:center"><div style="font-weight:800;color:var(--success)" id="correct-rate">-</div><div style="color:var(--muted);font-size:0.75rem">Doğruluk Oranı</div></div>
+          <div style="text-align:center"><div style="font-weight:800;color:var(--secondary)" id="xp-count">0</div><div style="color:var(--muted);font-size:0.75rem">XP Puanı</div></div>
+        </div>
+        <button class="btn-primary" style="width:100%" onclick="openQuiz()">Soru Çözmeye Devam Et →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section" id="kayit">
+  <div class="cta-card">
+    <h2>Ücretsiz Başla, Fark Yarat</h2>
+    <p>180.000+ öğrenci zaten SınavAI ile hazırlanıyor. Sen ne bekliyorsun?</p>
+    <div class="cta-input-row">
+      <input type="email" class="cta-input" placeholder="E-posta adresin">
+      <button class="cta-submit">Ücretsiz Kaydol</button>
+    </div>
+    <div style="margin-top:1rem;font-size:0.8rem;opacity:0.7">Kredi kartı gerekmez · Reklam yok · Sonsuza kadar ücretsiz</div>
+  </div>
+</div>
+
+<!-- QUIZ MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeQuiz()">✕</button>
+    <h3 id="modal-title">KPSS Türkçe – Soru 1/5</h3>
+    <div class="quiz-progress"><div class="quiz-progress-bar" id="quiz-bar" style="width:20%"></div></div>
+    <div class="quiz-info">
+      <span id="quiz-num">Soru 1 / 5</span>
+      <span id="quiz-timer-m">⏱ 00:45</span>
+    </div>
+    <div id="modal-question" style="margin-bottom:1.2rem;line-height:1.7"></div>
+    <div id="modal-options" class="demo-options"></div>
+    <div id="modal-ai" class="ai-hint" style="display:none;margin-top:1rem"></div>
+    <button id="next-btn" class="btn-primary" style="margin-top:1.2rem;width:100%;display:none" onclick="nextQuestion()">Sonraki Soru →</button>
+  </div>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:2rem 1.5rem;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+  <div class="footer-logo">SınavAI</div>
+  <div style="color:var(--muted);font-size:0.82rem">© 2026 SınavAI. Tüm hakları saklıdır.</div>
+  <div class="footer-links">
+    <a href="#" style="color:var(--muted);font-size:0.85rem">Gizlilik</a>
+    <a href="#" style="color:var(--muted);font-size:0.85rem">Şartlar</a>
+    <a href="#" style="color:var(--muted);font-size:0.85rem">İletişim</a>
+  </div>
+</footer>
+
+<script>
+const EXAMS = {
+  kpss: [
+    {name:'Türkçe', icon:'📝', bg:'rgba(99,102,241,0.15)', count:'12.400 soru', progress:82},
+    {name:'Matematik', icon:'🔢', bg:'rgba(16,185,129,0.15)', count:'9.800 soru', progress:65},
+    {name:'Tarih', icon:'🏛️', bg:'rgba(245,158,11,0.15)', count:'8.200 soru', progress:71},
+    {name:'Coğrafya', icon:'🗺️', bg:'rgba(239,68,68,0.15)', count:'5.600 soru', progress:58},
+    {name:'Vatandaşlık', icon:'⚖️', bg:'rgba(6,182,212,0.15)', count:'4.800 soru', progress:90},
+    {name:'Eğitim Bilimleri', icon:'🎓', bg:'rgba(168,85,247,0.15)', count:'6.200 soru', progress:44},
+    {name:'ÖABT Türkçe', icon:'📖', bg:'rgba(236,72,153,0.15)', count:'3.400 soru', progress:37},
+    {name:'Felsefe', icon:'🧠', bg:'rgba(20,184,166,0.15)', count:'2.100 soru', progress:22},
+  ],
+  yks: [
+    {name:'TYT Türkçe', icon:'📝', bg:'rgba(99,102,241,0.15)', count:'10.200 soru', progress:75},
+    {name:'TYT Matematik', icon:'🔢', bg:'rgba(16,185,129,0.15)', count:'11.800 soru', progress:60},
+    {name:'AYT Fizik', icon:'⚡', bg:'rgba(245,158,11,0.15)', count:'7.400 soru', progress:48},
+    {name:'AYT Kimya', icon:'🧪', bg:'rgba(239,68,68,0.15)', count:'6.800 soru', progress:55},
+    {name:'AYT Biyoloji', icon:'🧬', bg:'rgba(6,182,212,0.15)', count:'5.200 soru', progress:67},
+    {name:'AYT Edebiyat', icon:'📚', bg:'rgba(168,85,247,0.15)', count:'4.600 soru', progress:83},
+  ],
+  ales: [
+    {name:'Sözel Bölüm', icon:'📝', bg:'rgba(99,102,241,0.15)', count:'8.600 soru', progress:70},
+    {name:'Sayısal Bölüm', icon:'🔢', bg:'rgba(16,185,129,0.15)', count:'9.200 soru', progress:55},
+    {name:'Eşit Ağırlık', icon:'⚖️', bg:'rgba(245,158,11,0.15)', count:'4.800 soru', progress:62},
+  ],
+  dgs: [
+    {name:'Türkçe', icon:'📝', bg:'rgba(99,102,241,0.15)', count:'5.200 soru', progress:68},
+    {name:'Matematik', icon:'🔢', bg:'rgba(16,185,129,0.15)', count:'6.100 soru', progress:51},
+  ],
+  yds: [
+    {name:'İngilizce', icon:'🇬🇧', bg:'rgba(99,102,241,0.15)', count:'7.400 soru', progress:73},
+    {name:'Almanca', icon:'🇩🇪', bg:'rgba(16,185,129,0.15)', count:'3.200 soru', progress:40},
+    {name:'Fransızca', icon:'🇫🇷', bg:'rgba(245,158,11,0.15)', count:'2.800 soru', progress:35},
+  ],
+};
+
+const LEADERBOARD = [
+  {name:'Ahmet K.', city:'Ankara', score:2840, streak:14, initials:'AK'},
+  {name:'Zeynep M.', city:'İstanbul', score:2710, streak:21, initials:'ZM'},
+  {name:'Murat S.', city:'İzmir', score:2590, streak:9, initials:'MS'},
+  {name:'Fatma D.', city:'Bursa', score:2430, streak:6, initials:'FD'},
+  {name:'Hasan T.', city:'Konya', score:2280, streak:3, initials:'HT'},
+];
+
+const QUESTIONS = [
+  {q:'Aşağıdaki cümlelerin hangisinde "ile" bağlacı kullanılmıştır?', opts:['Kitabı okudum, notlar aldım.','Ahmet ile Mehmet birlikte geldi.','Hava yağmurlu, evde kaldık.','Erken kalktım ama geç kaldım.','Çok çalıştım fakat başaramadım.'], correct:1, exp:'İle bağlacı, iki ismi veya cümleyi birbirine bağlar. "Ahmet ile Mehmet" ifadesinde iki ismi bağlayan "ile" bağlacı kullanılmıştır.'},
+  {q:'Aşağıdakilerin hangisi Türkçede çoğul eki almaz?', opts:['masa','sular','ağaçlar','gözler','İstanbul\'lar'], correct:4, exp:'Özel isimler, yer adları, marka adları gibi tekil kavramlar genellikle çoğul eki almaz. Ancak "İstanbul\'lar" ifadesi örnek olarak kullanılmaz çünkü özel isimler tekil yapılıdır.'},
+  {q:'Türkiye\'de ilk Meclis hangi yılda açılmıştır?', opts:['1918','1919','1920','1921','1922'], correct:2, exp:'TBMM, 23 Nisan 1920\'de Ankara\'da açılmıştır. Bu tarih Ulusal Egemenlik ve Çocuk Bayramı olarak kutlanmaktadır.'},
+  {q:'Aşağıdaki şehirlerin hangisi Ege Bölgesi\'nde değildir?', opts:['İzmir','Manisa','Aydın','Muğla','Burdur'], correct:4, exp:'Burdur, Akdeniz Bölgesi\'nde yer almaktadır. İzmir, Manisa, Aydın ve Muğla ise Ege Bölgesi\'ne aittir.'},
+  {q:'Türkiye Büyük Millet Meclisi kaç milletvekilinden oluşur?', opts:['400','450','550','600','650'], correct:3, exp:'Anayasa değişikliğiyle TBMM, 600 milletvekilinden oluşmaktadır. Bu değişiklik 2017 referandumuyla kabul edilmiş, 2018 seçimlerinde uygulamaya girmiştir.'},
+];
+
+let currentQ = 0, answered = 0, correct = 0, quizTimer, quizSecs = 45;
+
+function showExam(key, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSubjects(key);
+}
+
+function renderSubjects(key) {
+  const grid = document.getElementById('subjects-grid');
+  grid.innerHTML = EXAMS[key].map(s => `
+    <div class="subject-card" onclick="openQuiz()">
+      <div class="subject-icon" style="background:${s.bg}">${s.icon}</div>
+      <div class="subject-info">
+        <div class="subject-name">${s.name}</div>
+        <div class="subject-count">${s.count}</div>
+        <div class="subject-bar"><div class="subject-progress" style="width:${s.progress}%"></div></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderLeaderboard() {
+  const rows = document.getElementById('leaderboard-rows');
+  rows.innerHTML = LEADERBOARD.map((u, i) => `
+    <div class="lb-row">
+      <div class="lb-rank rank-${i<3?i+1:'n'}">${i+1}</div>
+      <div class="lb-avatar">${u.initials}</div>
+      <div style="flex:1">
+        <div class="lb-name">${u.name}</div>
+        <div class="lb-city">📍 ${u.city}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="lb-score">${u.score.toLocaleString()} XP</div>
+        <div class="lb-streak">🔥 ${u.streak} gün</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Demo timer
+let demoSecs = 90;
+const timerEl = document.getElementById('timer');
+setInterval(() => {
+  if(demoSecs > 0) demoSecs--;
+  const m = Math.floor(demoSecs/60).toString().padStart(2,'0');
+  const s = (demoSecs%60).toString().padStart(2,'0');
+  timerEl.textContent = `⏱ ${m}:${s}`;
+}, 1000);
+
+let optionAnswered = false;
+function selectOption(el, isCorrect) {
+  if(optionAnswered) return;
+  optionAnswered = true;
+  el.classList.add(isCorrect ? 'correct' : 'wrong');
+  if(!isCorrect) {
+    document.querySelectorAll('.option')[2].classList.add('correct');
+  }
+  document.getElementById('ai-hint').style.display = 'block';
+  animateStats();
+}
+
+function animateStats() {
+  let count = 0, streak = 0, xp = 0;
+  const int = setInterval(() => {
+    count = Math.min(count+1, 7);
+    streak = Math.min(streak+1, 12);
+    xp = Math.min(xp+50, 350);
+    document.getElementById('today-count').textContent = count;
+    document.getElementById('streak-count').textContent = streak;
+    document.getElementById('xp-count').textContent = xp;
+    document.getElementById('correct-rate').textContent = '%' + Math.round(71 + count);
+    document.getElementById('today-bar').style.width = (count/30*100) + '%';
+    if(count >= 7) clearInterval(int);
+  }, 120);
+}
+
+// Modal Quiz
+function openQuiz() {
+  currentQ = 0; answered = 0; correct = 0; quizSecs = 45;
+  document.getElementById('modal').classList.add('active');
+  renderQuestion();
+  startQuizTimer();
+}
+function closeQuiz() {
+  document.getElementById('modal').classList.remove('active');
+  clearInterval(quizTimer);
+}
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  document.getElementById('modal-title').textContent = `KPSS – Soru ${currentQ+1}/5`;
+  document.getElementById('quiz-num').textContent = `Soru ${currentQ+1} / 5`;
+  document.getElementById('quiz-bar').style.width = ((currentQ+1)/5*100) + '%';
+  document.getElementById('modal-question').textContent = q.q;
+  document.getElementById('modal-ai').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+  const opts = document.getElementById('modal-options');
+  const letters = ['A','B','C','D','E'];
+  opts.innerHTML = q.opts.map((o,i) => `
+    <div class="option" onclick="answerQ(this,${i},${q.correct})">
+      <div class="option-letter">${letters[i]}</div> ${o}
+    </div>`).join('');
+}
+function answerQ(el, idx, correct_idx) {
+  const opts = document.querySelectorAll('#modal-options .option');
+  opts.forEach(o => o.onclick = null);
+  el.classList.add(idx === correct_idx ? 'correct' : 'wrong');
+  if(idx !== correct_idx) opts[correct_idx].classList.add('correct');
+  const ai = document.getElementById('modal-ai');
+  ai.innerHTML = `<strong>🤖 AI Açıklaması:</strong> ${QUESTIONS[currentQ].exp}`;
+  ai.style.display = 'block';
+  document.getElementById('next-btn').style.display = 'block';
+  if(idx === correct_idx) correct++;
+}
+function nextQuestion() {
+  currentQ++;
+  if(currentQ >= QUESTIONS.length) {
+    document.getElementById('modal-title').textContent = '🎉 Tamamlandı!';
+    document.getElementById('modal-question').textContent = `${QUESTIONS.length} sorudan ${correct} tanesini doğru cevapladın. Başarın: %${Math.round(correct/QUESTIONS.length*100)}`;
+    document.getElementById('modal-options').innerHTML = '';
+    document.getElementById('modal-ai').style.display = 'none';
+    document.getElementById('next-btn').textContent = 'Tekrar Dene';
+    document.getElementById('next-btn').onclick = () => { currentQ=0; correct=0; renderQuestion(); };
+    document.getElementById('quiz-bar').style.width = '100%';
+    clearInterval(quizTimer);
+    return;
+  }
+  quizSecs = 45;
+  renderQuestion();
+}
+function startQuizTimer() {
+  clearInterval(quizTimer);
+  quizTimer = setInterval(() => {
+    quizSecs--;
+    const m = Math.floor(quizSecs/60).toString().padStart(2,'0');
+    const s = (quizSecs%60).toString().padStart(2,'0');
+    document.getElementById('quiz-timer-m').textContent = `⏱ ${m}:${s}`;
+    if(quizSecs <= 0) { quizSecs = 45; nextQuestion(); }
+  }, 1000);
+}
+function scrollTo(id) { document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+
+renderSubjects('kpss');
+renderLeaderboard();
+animateStats();
+</script>
+</body>
+</html>
