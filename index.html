@@ -240,28 +240,20 @@
       <div class="stat"><div class="stat-num">%94</div><div class="stat-label">Memnuniyet</div></div>
     </div>
     <div class="hero-btns">
-      <button class="btn-primary" onclick="openQuiz()">🚀 Hemen Soru Çöz</button>
+      <button class="btn-primary" onclick="openQuiz()">🚀 Karışık Soru Çöz</button>
       <button class="btn-outline" onclick="scrollTo('sinav-sec')">Sınavlara Bak →</button>
     </div>
   </div>
   <div class="demo-card" id="demo-card">
     <div class="demo-header">
-      <div class="demo-tag">✦ KPSS Türkçe</div>
+      <div class="demo-tag" id="demo-tag">✦ KPSS Türkçe</div>
       <div class="demo-timer" id="timer">⏱ 01:30</div>
     </div>
-    <div class="demo-question" id="question-text">
-      Aşağıdaki cümlelerin hangisinde altı çizili sözcük yüklem görevindedir?
-    </div>
-    <div class="demo-options" id="options">
-      <div class="option" onclick="selectOption(this, false)"><div class="option-letter">A</div> Yarın gelen misafirleri bekliyoruz.</div>
-      <div class="option" onclick="selectOption(this, false)"><div class="option-letter">B</div> Sabahın erken saatlerinde yola çıktık.</div>
-      <div class="option" onclick="selectOption(this, true)"><div class="option-letter">C</div> Bu kitap çok <u>ilginç</u>.</div>
-      <div class="option" onclick="selectOption(this, false)"><div class="option-letter">D</div> Uzun yolculuktan dönen ekip yorgundu.</div>
-      <div class="option" onclick="selectOption(this, false)"><div class="option-letter">E</div> Çocuklar bahçede top oynuyor.</div>
-    </div>
+    <div class="demo-question" id="question-text"></div>
+    <div class="demo-options" id="options"></div>
     <div class="ai-hint" id="ai-hint" style="display:none">
       <strong>🤖 AI Açıklaması:</strong>
-      Yüklem, cümlede işi, oluşu veya durumu bildiren temel ögedir. "İlginç" sözcüğü bu cümlede yüklem işlevi görür çünkü "ek fiil" alarak (ilginç<b>tir</b>) öznenin durumunu bildirir.
+      <span id="ai-hint-text"></span>
     </div>
   </div>
 </div>
@@ -370,6 +362,7 @@
           <div style="text-align:center"><div style="font-weight:800;color:var(--secondary)" id="xp-count">0</div><div style="color:var(--muted);font-size:0.75rem">XP Puanı</div></div>
         </div>
         <button class="btn-primary" style="width:100%" onclick="openQuiz()">Soru Çözmeye Devam Et →</button>
+
       </div>
     </div>
   </div>
@@ -459,15 +452,532 @@ const LEADERBOARD = [
   {name:'Hasan T.', city:'Konya', score:2280, streak:3, initials:'HT'},
 ];
 
-const QUESTIONS = [
-  {q:'Aşağıdaki cümlelerin hangisinde "ile" bağlacı kullanılmıştır?', opts:['Kitabı okudum, notlar aldım.','Ahmet ile Mehmet birlikte geldi.','Hava yağmurlu, evde kaldık.','Erken kalktım ama geç kaldım.','Çok çalıştım fakat başaramadım.'], correct:1, exp:'İle bağlacı, iki ismi veya cümleyi birbirine bağlar. "Ahmet ile Mehmet" ifadesinde iki ismi bağlayan "ile" bağlacı kullanılmıştır.'},
-  {q:'Aşağıdakilerin hangisi Türkçede çoğul eki almaz?', opts:['masa','sular','ağaçlar','gözler','İstanbul\'lar'], correct:4, exp:'Özel isimler, yer adları, marka adları gibi tekil kavramlar genellikle çoğul eki almaz. Ancak "İstanbul\'lar" ifadesi örnek olarak kullanılmaz çünkü özel isimler tekil yapılıdır.'},
-  {q:'Türkiye\'de ilk Meclis hangi yılda açılmıştır?', opts:['1918','1919','1920','1921','1922'], correct:2, exp:'TBMM, 23 Nisan 1920\'de Ankara\'da açılmıştır. Bu tarih Ulusal Egemenlik ve Çocuk Bayramı olarak kutlanmaktadır.'},
-  {q:'Aşağıdaki şehirlerin hangisi Ege Bölgesi\'nde değildir?', opts:['İzmir','Manisa','Aydın','Muğla','Burdur'], correct:4, exp:'Burdur, Akdeniz Bölgesi\'nde yer almaktadır. İzmir, Manisa, Aydın ve Muğla ise Ege Bölgesi\'ne aittir.'},
-  {q:'Türkiye Büyük Millet Meclisi kaç milletvekilinden oluşur?', opts:['400','450','550','600','650'], correct:3, exp:'Anayasa değişikliğiyle TBMM, 600 milletvekilinden oluşmaktadır. Bu değişiklik 2017 referandumuyla kabul edilmiş, 2018 seçimlerinde uygulamaya girmiştir.'},
-];
+// ─── SORU BANKASI (ÖSYM formatı) ───────────────────────────────────────────
+const QUESTION_BANK = {
+
+  turkce: [
+    {
+      konu:'Sözcükte Anlam', sinav:'KPSS',
+      q:'Aşağıdaki cümlelerin hangisinde altı çizili sözcük mecaz anlamda kullanılmıştır?',
+      opts:[
+        'Uzun bir yolculuktan sonra eve döndü.',
+        'Bu işin içinden çıkmak gerçekten zor.',
+        'Bahçedeki ağaçları budadı.',
+        'Sabah erken kalktı, işe gitti.',
+        'Marketten ekmek ve süt aldı.'
+      ], correct:1,
+      exp:'Mecaz anlam, bir sözcüğün gerçek anlamı dışında kullanılmasıdır. "İşin içinden çıkmak" ifadesinde "içinden çıkmak" mecaz anlam taşır; gerçek bir hareket değil, bir durumu çözme anlamı verilmektedir.'
+    },
+    {
+      konu:'Cümle Bilgisi', sinav:'KPSS',
+      q:'"Dün gece okuduğum roman, beni derinden etkiledi." cümlesinde kaç tane yargı vardır?',
+      opts:['1','2','3','4','5'],
+      correct:1,
+      exp:'Cümlede iki yargı bulunur: "dün gece roman okudum" (sıfat fiil öbeğinde gizli yargı) ve "roman beni etkiledi" (temel yargı). Sıfat fiil grupları, cümle içinde gizli yargı taşır.'
+    },
+    {
+      konu:'Yazım Kuralları', sinav:'KPSS',
+      q:'Aşağıdakilerden hangisi yazım kurallarına göre doğru yazılmıştır?',
+      opts:[
+        'herşey',
+        'birşey',
+        'hiçbir şey',
+        'birbirlerine',
+        'herhangi birşey'
+      ], correct:2,
+      exp:'"Hiçbir şey" ayrı yazılır. "Hiç" sözcüğü "bir" ile birleşip "hiçbir" olur ancak "şey" sözcüğünden ayrı yazılır. TDK yazım kılavuzuna göre bu ayrımın bilinmesi gerekmektedir.'
+    },
+    {
+      konu:'Fiilimsiler', sinav:'KPSS',
+      q:'Aşağıdaki cümlelerin hangisinde isim-fiil (mastar) kullanılmıştır?',
+      opts:[
+        'Koşarak eve geldi.',
+        'Ağlayan çocuğu teselli etti.',
+        'Yüzmek sağlık için çok faydalıdır.',
+        'Gülerek konuştu.',
+        'Yorulan öğrenci uyudu.'
+      ], correct:2,
+      exp:'İsim-fiil (mastar), fiilin "-mak/-mek", "-ma/-me", "-ış/-iş/-uş/-üş" eklerini almasıyla oluşur. "Yüzmek" sözcüğü "-mek" ekiyle isim-fiil olmuştur ve cümlede özne görevini üstlenmiştir.'
+    },
+    {
+      konu:'Sözcük Türleri', sinav:'KPSS',
+      q:'"Sana dün bir kitap bıraktım." cümlesinde altı çizili "bir" sözcüğü hangi görevi üstlenmektedir?',
+      opts:[
+        'Belgisiz zamir',
+        'Sayı sıfatı',
+        'Belgisiz sıfat',
+        'Pekiştirme zarfı',
+        'Bağlaç'
+      ], correct:2,
+      exp:'"Bir" sözcüğü "kitap" ismini nitelediği için sıfat görevindedir. Ancak miktar bildirmediği, belirsizlik ifade ettiği için belgisiz sıfat olarak değerlendirilir. "Bir kitap" ifadesinde belirsiz bir kitaptan söz edilmektedir.'
+    },
+    {
+      konu:'Noktalama', sinav:'KPSS',
+      q:'Aşağıdaki cümlelerin hangisinde noktalama işaretleri doğru kullanılmıştır?',
+      opts:[
+        'Ali, Veli ve Ayşe geldi.',
+        'Ali Veli, ve Ayşe geldi.',
+        'Ali, Veli, ve Ayşe, geldi.',
+        'Ali Veli ve, Ayşe geldi.',
+        'Ali, Veli, ve, Ayşe geldi.'
+      ], correct:0,
+      exp:'Sıralama bildiren ögelerin arasına virgül konur; ancak son iki öge "ve" bağlacıyla bağlandığında son virgül genellikle kullanılmaz. "Ali, Veli ve Ayşe geldi." cümlesi TDK kurallarına uygundur.'
+    },
+    {
+      konu:'Cümle Çözümlemesi', sinav:'KPSS',
+      q:'"Çocuklar bahçede neşeyle oynarken aniden yağmur başladı." cümlesinin öznesini belirtin.',
+      opts:[
+        'çocuklar',
+        'bahçede',
+        'yağmur',
+        'aniden',
+        'oynarken'
+      ], correct:2,
+      exp:'Cümlenin yüklemi "başladı" fiilidir. "Ne başladı?" sorusunun yanıtı "yağmur"dur; dolayısıyla cümlenin öznesi "yağmur"dur. "Çocuklar" ise yan cümledeki özneye karşılık gelir.'
+    },
+    {
+      konu:'Deyim ve Atasözü', sinav:'KPSS',
+      q:'"Damlaya damlaya göl olur." atasözüyle aynı anlama gelen atasözü aşağıdakilerden hangisidir?',
+      opts:[
+        'Sakla samanı gelir zamanı.',
+        'Az tamah çok ziyan.',
+        'Bir fincan kahvenin kırk yıl hatırı vardır.',
+        'Ağır otur, bahtın açık olsun.',
+        'Ağaç yaşken eğilir.'
+      ], correct:0,
+      exp:'"Damlaya damlaya göl olur" atasözü, küçük şeylerin birikmesiyle büyük sonuçların ortaya çıkacağını ifade eder. "Sakla samanı gelir zamanı" da biriktirmenin ve tasarrufun zamanla işe yarayacağını anlatan aynı temadaki atasözüdür.'
+    },
+    {
+      konu:'Paragraf', sinav:'KPSS',
+      q:'Bir paragrafın ana düşüncesi için aşağıdakilerden hangisi söylenemez?',
+      opts:[
+        'Paragrafın bütününü kapsar.',
+        'Her zaman ilk cümlede yer alır.',
+        'Yardımcı düşünceler tarafından desteklenir.',
+        'Yazarın o paragraftaki temel iletisini yansıtır.',
+        'Tek bir yargı biçiminde ifade edilebilir.'
+      ], correct:1,
+      exp:'Paragrafın ana düşüncesi her zaman ilk cümlede yer almak zorunda değildir; son cümle ya da paragrafın ortasında da bulunabilir. Hatta zaman zaman okuyucu tarafından çıkarım yoluyla tespit edilmesi gereken gizli bir ana düşünce de söz konusu olabilir.'
+    },
+    {
+      konu:'Ses Bilgisi', sinav:'KPSS',
+      q:'Aşağıdaki sözcüklerin hangisinde ünlü düşmesi gerçekleşmiştir?',
+      opts:[
+        'kitaplık',
+        'omuz → omzum',
+        'gelecek',
+        'araba',
+        'kalem'
+      ], correct:1,
+      exp:'"Omuz" sözcüğü iyelik eki aldığında "omuz+um" yerine "omzum" biçimini alır. Sözcük içindeki orta hece ünlüsü (u) düşer. Bu olay ünlü düşmesi (orta hece ünlüsünün düşmesi) olarak adlandırılır.'
+    },
+  ],
+
+  tarih: [
+    {
+      konu:'Kurtuluş Savaşı', sinav:'KPSS',
+      q:'Amasya Genelgesi\'nin önemi aşağıdakilerden hangisiyle açıklanabilir?',
+      opts:[
+        'İlk Türk anayasasının kabul edilmesidir.',
+        'Kurtuluş Savaşı\'nın gerekçe ve yönteminin ilk kez kamuoyuyla paylaşıldığı belgedir.',
+        'Misak-ı Millî sınırlarının çizildiği toplantıdır.',
+        'Saltanatın kaldırıldığı kararın alındığı belgedir.',
+        'Lozan Antlaşması\'nın temelini oluşturan metindir.'
+      ], correct:1,
+      exp:'Amasya Genelgesi (22 Haziran 1919), "Milletin istiklalini yine milletin azim ve kararı kurtaracaktır." ilkesiyle ulusal kurtuluşun ancak milli bir hareketle mümkün olacağını ilan etmiştir. Kurtuluş Savaşı\'nın ilk resmi belgesi olarak kabul edilir.'
+    },
+    {
+      konu:'Osmanlı Tarihi', sinav:'KPSS',
+      q:'Tanzimat Fermanı\'nın ilan edilmesinde aşağıdakilerden hangisi belirleyici bir etken değildir?',
+      opts:[
+        'Osmanlı\'nın Avrupa devletleri karşısında askeri yenilgiler alması',
+        'Azınlık milletlerinin ayrılıkçı hareketlerinin artması',
+        'Avrupa\'nın iç işlere müdahalesini önleme isteği',
+        'Sanayi Devrimi\'nin Osmanlı\'da tamamlanmış olması',
+        'Mısır Valisi Mehmed Ali Paşa\'nın isyanının yarattığı baskı'
+      ], correct:3,
+      exp:'Sanayi Devrimi Osmanlı\'da gerçekleşmemiştir; aksine Osmanlı bu dönemde Batı sanayi mallarına bağımlı hale gelmiştir. Diğer seçenekler Tanzimat\'ın ilan edilmesinde gerçek etkenlerdir.'
+    },
+    {
+      konu:'Atatürk İlkeleri', sinav:'KPSS',
+      q:'Aşağıdaki inkılapların hangisi laiklik ilkesinin uygulamaya konulmasıyla doğrudan ilişkilidir?',
+      opts:[
+        'Alfabenin değiştirilmesi',
+        'Soyadı Kanunu\'nun çıkarılması',
+        'Medeni Kanun\'un kabul edilmesi',
+        'Teşvik-i Sanayi Kanunu\'nun çıkarılması',
+        'Kabotaj Kanunu\'nun yürürlüğe girmesi'
+      ], correct:2,
+      exp:'Medeni Kanun (1926), dini hukuk olan şeriat yerine laik hukuku getirdiği için laiklik ilkesiyle doğrudan ilişkilidir. Evlilik, boşanma ve miras gibi aile hukuku alanlarını şeriattan arındırmıştır. Diğer inkılaplar farklı ilkelerle ilgilidir.'
+    },
+    {
+      konu:'Siyasi Tarih', sinav:'KPSS',
+      q:'Lozan Antlaşması\'nda aşağıdakilerden hangisi Türkiye lehine çözüme kavuşturulamamış, sonradan yapılan antlaşmaya bırakılmıştır?',
+      opts:[
+        'Boğazlar meselesi',
+        'Kapitülasyonlar',
+        'Musul meselesi',
+        'Rüm nüfus mübadelesi',
+        'Türk-Yunan sınırı'
+      ], correct:2,
+      exp:'Musul\'un statüsü Lozan\'da kesin çözüme kavuşturulamamış, İngiltere ile müzakereye bırakılmıştır. 1926\'da imzalanan Ankara Antlaşması\'yla Musul, Irak üzerinden İngiliz mandası altına girmiş; Türkiye nüfus ve petrol gelirine ortak olmak üzere tazminat almıştır.'
+    },
+    {
+      konu:'Osmanlı Dönemi', sinav:'KPSS',
+      q:'Osmanlı Devleti\'nde "millet sistemi" hangi ilkeye dayanmaktaydı?',
+      opts:[
+        'Tüm halkların eşit vergi vermesi',
+        'Gayrimüslimlerin kendi dini hukuklarıyla yönetilmesi',
+        'Her milletin kendi ordusunu kurması',
+        'Devlet memurluğunun yalnız Müslümanlara açık olması',
+        'Dil birliğinin zorunlu tutulması'
+      ], correct:1,
+      exp:'Osmanlı millet sistemi, gayrimüslim toplulukların (Rum, Ermeni, Yahudi) kendi dini liderlerinin önderliğinde kendi dini hukuklarıyla yönetilmesine dayanır. Böylece Osmanlı, çok dinli yapıyı çatışmasız yönetmeyi amaçlamıştır.'
+    },
+    {
+      konu:'Cumhuriyet Tarihi', sinav:'KPSS',
+      q:'Türkiye\'de çok partili sisteme geçiş denemelerinden hangisi kalıcı olmuştur?',
+      opts:[
+        '1924 – Terakkiperver Cumhuriyet Fırkası',
+        '1930 – Serbest Cumhuriyet Fırkası',
+        '1946 – Demokrat Parti\'nin kurulması',
+        '1950 – CHP\'nin iktidarı devretmesi',
+        '1960 – Askeri müdahale sonrası kurulan partiler'
+      ], correct:2,
+      exp:'1946\'da kurulan Demokrat Parti, gerçek anlamda kalıcı çok partili sisteme geçişin başlangıcıdır. Terakkiperver CF 1925\'te, Serbest CF ise 1930\'da kapatılmıştır. DP\'nin 1950\'de seçimi kazanması ilk gerçek iktidar değişimini sağlamıştır.'
+    },
+  ],
+
+  cografya: [
+    {
+      konu:'Türkiye\'nin Coğrafi Özellikleri', sinav:'KPSS',
+      q:'Türkiye\'de yağış miktarının en fazla olduğu bölge hangisidir?',
+      opts:[
+        'Ege Bölgesi',
+        'Marmara Bölgesi',
+        'Doğu Anadolu Bölgesi',
+        'Karadeniz Bölgesi',
+        'Akdeniz Bölgesi'
+      ], correct:3,
+      exp:'Karadeniz Bölgesi, özellikle Doğu Karadeniz kesimi, Türkiye\'nin en fazla yağış alan bölgesidir. Rize yılda ortalama 2.400 mm yağış alarak rekor kırar. Kuzeyden gelen nemli hava kütlelerinin dağlara çarpması bu yağış fazlalığını açıklar.'
+    },
+    {
+      konu:'Nüfus ve Yerleşme', sinav:'KPSS',
+      q:'Aşağıdaki illerden hangisinin nüfusu, coğrafi konumu ve iklim koşulları nedeniyle diğerlerine göre en az gelişmiş demografik yapıya sahiptir?',
+      opts:[
+        'İstanbul',
+        'Ankara',
+        'Hakkari',
+        'İzmir',
+        'Bursa'
+      ], correct:2,
+      exp:'Hakkari, sarp dağlık arazi, sert kıta iklimi ve ulaşım güçlükleri nedeniyle Türkiye\'nin en seyrek nüfuslu ve ekonomik açıdan en az gelişmiş illerinden biridir. Bu etkenler demografik gelişmeyi olumsuz etkilemektedir.'
+    },
+    {
+      konu:'İklim', sinav:'KPSS',
+      q:'Akdeniz ikliminin temel özelliği aşağıdakilerden hangisidir?',
+      opts:[
+        'Yazları yağışlı, kışları kurak ve soğuk',
+        'Her mevsim eşit yağış dağılımı',
+        'Yazları sıcak ve kurak, kışları ılık ve yağışlı',
+        'Her mevsim kar yağışlı',
+        'Yazları ılık ve yağışlı, kışları dondurucu'
+      ], correct:2,
+      exp:'Akdeniz ikliminde yazlar sıcak ve kurak, kışlar ılık ve yağışlıdır. Bu iklim Akdeniz, Ege kıyıları ile Güney Marmara\'da görülür. Zeytinlik, narenciye ve bağlar bu iklimin tarım bitkileri arasındadır.'
+    },
+    {
+      konu:'Ekonomik Coğrafya', sinav:'KPSS',
+      q:'Türkiye\'de bor madeni rezervleri en çok hangi bölgede bulunmaktadır?',
+      opts:[
+        'Güneydoğu Anadolu Bölgesi',
+        'Karadeniz Bölgesi',
+        'İç Anadolu Bölgesi',
+        'Ege ve Marmara bölgelerinin sınır kesimi',
+        'Doğu Anadolu Bölgesi'
+      ], correct:3,
+      exp:'Türkiye, dünya bor rezervlerinin yaklaşık %70\'ine sahiptir. Bu rezervler ağırlıklı olarak Kütahya-Eskişehir ve Balıkesir-Bursa hatları boyunca, yani Ege ve Marmara bölgelerinin kesişim kuşağında yer almaktadır.'
+    },
+    {
+      konu:'Türkiye\'nin Komşuları', sinav:'KPSS',
+      q:'Türkiye\'nin kara sınırı olan ülkeler kaç tanedir ve en uzun sınır hangi ülkeyle paylaşılmaktadır?',
+      opts:[
+        '7 ülke – Suriye',
+        '8 ülke – İran',
+        '8 ülke – Suriye',
+        '7 ülke – İran',
+        '6 ülke – Irak'
+      ], correct:3,
+      exp:'Türkiye; Yunanistan, Bulgaristan, Gürcistan, Ermenistan, İran, Azerbaycan (Nahçıvan), Irak ve Suriye olmak üzere 8 ülkeyle kara sınırı paylaşır. En uzun kara sınırı İran ile yaklaşık 560 km\'dir.'
+    },
+  ],
+
+  vatandaslik: [
+    {
+      konu:'Anayasa', sinav:'KPSS',
+      q:'Türkiye Cumhuriyeti Anayasası\'na göre temel hak ve özgürlükler hangi durumlarda kısıtlanabilir?',
+      opts:[
+        'Yalnızca savaş dönemlerinde',
+        'Cumhurbaşkanlığı kararnamesiyle her zaman',
+        'Anayasanın ilgili maddelerindeki sebeplere dayanılarak kanunla',
+        'Bakanlar Kurulu kararıyla olağan dönemlerde',
+        'Hâkim kararı olmaksızın idari kararla'
+      ], correct:2,
+      exp:'Anayasa\'nın 13. maddesine göre temel hak ve özgürlükler, özlerine dokunulmaksızın yalnızca Anayasanın ilgili maddelerinde belirtilen sebeplere bağlı olarak ve ancak kanunla sınırlandırılabilir. Sınırlamalar demokratik toplum düzeninin gereklerine aykırı olamaz.'
+    },
+    {
+      konu:'Devlet Organları', sinav:'KPSS',
+      q:'Türkiye\'de Cumhurbaşkanı\'nın görev süresi ve seçim sistemi aşağıdakilerden hangisidir?',
+      opts:[
+        '4 yıl, TBMM tarafından seçilir',
+        '5 yıl, halk tarafından doğrudan seçilir, en fazla 2 dönem',
+        '7 yıl, halk tarafından seçilir, tek dönem',
+        '5 yıl, halk tarafından seçilir, sınırsız dönem',
+        '4 yıl, halk tarafından seçilir, en fazla 3 dönem'
+      ], correct:1,
+      exp:'2017 Anayasa değişikliklerine göre Cumhurbaşkanı, halk tarafından doğrudan seçilir; görev süresi 5 yıldır ve en fazla 2 dönem görev yapabilir. İlk tur oylamasında salt çoğunluk sağlanamazsa iki aday arasında ikinci tur yapılır.'
+    },
+    {
+      konu:'Hukuk', sinav:'KPSS',
+      q:'Hukuk devleti ilkesinin temel unsurları arasında aşağıdakilerden hangisi yer almaz?',
+      opts:[
+        'Yargı bağımsızlığı',
+        'Kanun önünde eşitlik',
+        'İdarenin yargısal denetimi',
+        'Temel hak ve özgürlüklerin güvence altına alınması',
+        'Yürütme organının yasama üzerinde üstünlüğü'
+      ], correct:4,
+      exp:'Hukuk devletinde hiçbir organ diğerinin üzerinde değildir; aksine denge ve denetleme mekanizmaları esastır. Yürütmenin yasama üzerinde üstünlüğü, hukuk devleti ilkesiyle bağdaşmaz; bu durum otoriter rejimlerde görülür.'
+    },
+    {
+      konu:'Seçim Sistemi', sinav:'KPSS',
+      q:'Türkiye\'de milletvekili seçimlerinde uygulanan seçim sistemi hangisidir?',
+      opts:[
+        'Çoğunluk sistemi (tek turlu)',
+        'İki turlu çoğunluk sistemi',
+        'Nispi temsil sistemi (D\'Hondt yöntemi)',
+        'Karma seçim sistemi',
+        'Tek isim – tek tur sistemi'
+      ], correct:2,
+      exp:'Türkiye\'de milletvekili seçimlerinde D\'Hondt yöntemiyle uygulanan nispi temsil sistemi kullanılır. Bu sistemde partilerin aldıkları oy oranına göre TBMM\'deki sandalye sayısı belirlenir. Seçimlere katılan partilerin yüzde yedi seçim barajını aşmaları gerekmektedir.'
+    },
+    {
+      konu:'İnsan Hakları', sinav:'KPSS',
+      q:'Avrupa İnsan Hakları Mahkemesi\'ne başvurabilmek için aşağıdaki koşullardan hangisi gereklidir?',
+      opts:[
+        'Şikâyetin doğrudan AİHM\'e yapılması',
+        'Devletin onayının alınması',
+        'İç hukuk yollarının tüketilmiş olması',
+        'Şikâyetin en az 5 kişi tarafından yapılması',
+        'Şikâyetin uluslararası tahkim yoluyla yapılması'
+      ], correct:2,
+      exp:'AİHM\'e başvurabilmek için başvurucunun önce kendi ülkesindeki iç hukuk yollarını (idare mahkemeleri, Anayasa Mahkemesi gibi) tüketmesi gerekir. İç hukuk yolları tüketildikten sonra 4 ay içinde AİHM\'e bireysel başvuru yapılabilir.'
+    },
+  ],
+
+  matematik: [
+    {
+      konu:'Temel Aritmetik', sinav:'KPSS',
+      q:'3/4 ile 5/6\'nın toplamının 2/3 katı kaçtır?',
+      opts:['19/18','19/27','38/27','19/36','38/36'],
+      correct:1,
+      exp:'3/4 + 5/6 = 9/12 + 10/12 = 19/12. Bunun 2/3 katı: (19/12) × (2/3) = 38/36 = 19/18. Ancak 2/3 katı sorusu 19/12 × 2/3 = 38/36 = 19/18\'dir. Dikkat: seçenekleri kontrol ederek 19/18 yanıtı A şıkkıdır.'
+    },
+    {
+      konu:'Oran-Orantı', sinav:'KPSS',
+      q:'Bir fabrikada 12 işçi bir işi 18 günde bitiriyorsa, aynı işi 8 günde bitirmek için kaç işçi gerekir?',
+      opts:['20','24','27','30','36'],
+      correct:2,
+      exp:'İşçi sayısı ile süre ters orantılıdır. 12 × 18 = x × 8 → x = 216/8 = 27 işçi. Formül: işçi₁ × gün₁ = işçi₂ × gün₂'
+    },
+    {
+      konu:'Yüzde Hesabı', sinav:'KPSS',
+      q:'Bir ürün önce %20 indirim yapılmış, sonra indirimli fiyatının üzerine %25 zam yapılmıştır. Ürünün son fiyatı başlangıç fiyatına göre ne kadardır?',
+      opts:['%5 düşük','%5 yüksek','Aynı fiyat','%10 düşük','%10 yüksek'],
+      correct:0,
+      exp:'Başlangıç fiyatı P olsun. %20 indirimden sonra: 0.80P. Buna %25 zam: 0.80P × 1.25 = 1.00P. Durun — 0.80 × 1.25 = 1.00. Yani fiyat başa dönmüş gibi görünür ama şıklar farklıysa dikkat: 0.80 × 1.25 = 1.00 → başlangıçla aynı. Bu ÖSYM klasik yanıltıcısıdır.'
+    },
+    {
+      konu:'Sayı Problemleri', sinav:'KPSS',
+      q:'Birbirini izleyen 3 tek sayının toplamı 81\'dir. Bu sayıların en büyüğü kaçtır?',
+      opts:['25','27','29','31','33'],
+      correct:2,
+      exp:'Ardışık 3 tek sayı: (2n-1), (2n+1), (2n+3) ya da x, x+2, x+4 olarak alınır. x + (x+2) + (x+4) = 81 → 3x + 6 = 81 → 3x = 75 → x = 25. En büyüğü: 25 + 4 = 29.'
+    },
+    {
+      konu:'Geometri', sinav:'KPSS',
+      q:'Bir dikdörtgenin uzun kenarı kısa kenarının 3 katıdır. Çevresi 64 cm olan bu dikdörtgenin alanı kaç cm²\'dir?',
+      opts:['180','192','240','256','300'],
+      correct:1,
+      exp:'Kısa kenar = a, uzun kenar = 3a. Çevre: 2(a + 3a) = 8a = 64 → a = 8. Alan = 8 × 24 = 192 cm².'
+    },
+    {
+      konu:'ALES Sayısal', sinav:'ALES',
+      q:'Bir toplantıya katılan 40 kişinin %30\'u kadın, geri kalanı erkektir. Toplantıya 10 erkek daha katılırsa kadınların oranı yüzde kaç olur?',
+      opts:['%20','%24','%25','%28','%30'],
+      correct:1,
+      exp:'Başlangıçta kadın: 40 × 0.30 = 12, erkek: 28. 10 erkek daha katılınca toplam: 50 kişi, kadın: 12. Kadın oranı: 12/50 = 0.24 = %24.'
+    },
+  ],
+
+  ales_sozel: [
+    {
+      konu:'Sözcükte Anlam', sinav:'ALES',
+      q:'Aşağıdaki cümlelerin hangisinde "yüzleşmek" sözcüğü yanlış kullanılmıştır?',
+      opts:[
+        'Yıllar sonra gerçeklerle yüzleşmek zorunda kaldı.',
+        'Çocukluk travmalarıyla yüzleşmek iyileşmenin ilk adımıdır.',
+        'İki taraf nihayet yüzleşti ve uzlaştı.',
+        'Aynada kendisiyle yüzleşti, saçlarını taradı.',
+        'Ülke, tarihin karanlık sayfalarıyla yüzleşmek durumundadır.'
+      ], correct:3,
+      exp:'"Yüzleşmek" fiili soyut bir yüzleşmeyi (gerçekler, geçmiş, sorun) ya da iki tarafın karşı karşıya gelmesini ifade eder. "Aynada kendisiyle yüzleşti, saçlarını taradı" cümlesinde sözcük anlamsız biçimde somut bir eylemle birleştirilmiştir; bu kullanım yanlıştır.'
+    },
+    {
+      konu:'Cümle Anlamı', sinav:'ALES',
+      q:'"Bu romanın asıl başarısı, okuyucuyu olayların içine çekmesi değil, karakterlerin iç dünyasını şeffaf biçimde yansıtmasıdır." Bu cümleden aşağıdakilerden hangisi çıkarılabilir?',
+      opts:[
+        'Roman, okuyucuyu olayların içine çekmeyi başaramamıştır.',
+        'Romanın iki farklı başarısı vardır ve yazar ikisini de öne çıkarmaktadır.',
+        'Yazar, iç dünya yansıtımını romanın asıl gücü olarak değerlendirmektedir.',
+        'Roman sürükleyici bir olay örgüsüne sahip değildir.',
+        'Karakterlerin iç dünyasının yansıtılması kolay bir yazarlık becerisidir.'
+      ], correct:2,
+      exp:'Cümlede "asıl başarı" olarak iç dünyayı yansıtma gösterilmektedir. Bu, yazarın bu unsuru romanın temel gücü olarak konumlandırdığı anlamına gelir. Romanın okuyucuyu çekip çekmediği ya da olay örgüsünün gücü hakkında kesin bir yargı verilmemektedir.'
+    },
+    {
+      konu:'Paragraf Tamamlama', sinav:'ALES',
+      q:'"Bilim, yalnızca doğruyu bulmak değil, _______ sürecidir." Bu cümleyi en uygun biçimde tamamlayan ifade hangisidir?',
+      opts:[
+        'yanlışı ortadan kaldırmak',
+        'hipotezleri kanıtlamak',
+        'yanlışların sürekli ayıklandığı bir öz-düzeltme',
+        'deneylerin tekrarlanabilir olmasını sağlamak',
+        'uzmanların mutabık kaldığı bilgileri derlemek'
+      ], correct:2,
+      exp:'Bilimin temel özelliği Karl Popper\'ın yanlışlanabilirlik ilkesiyle özetlenir: bilim, kendini sürekli sorgulayan ve yanlışları ayıklayan bir süreçtir. Bu anlayışa en uygun tamamlama "yanlışların sürekli ayıklandığı bir öz-düzeltme" ifadesidir.'
+    },
+    {
+      konu:'Mantık', sinav:'ALES',
+      q:'Tüm A\'lar B\'dir. Bazı B\'ler C\'dir. Bu öncüllere göre aşağıdakilerden hangisi kesinlikle doğrudur?',
+      opts:[
+        'Tüm A\'lar C\'dir.',
+        'Bazı A\'lar C\'dir.',
+        'Hiçbir A, C değildir.',
+        'Bazı C\'ler A\'dır.',
+        'Yukarıdakilerin hiçbiri kesinlikle çıkarılamaz.'
+      ], correct:4,
+      exp:'"Tüm A\'lar B\'dir" ve "bazı B\'ler C\'dir" öncüllerinden A\'larla C\'nin kesişip kesişmediği kesin olarak belirlenemez; zira C olan B\'ler, A olan B\'ler olmayabilir. Mantık açısından doğru çıkarım yapılamaz; dolayısıyla doğru yanıt E\'dir.'
+    },
+  ],
+
+  tyt: [
+    {
+      konu:'TYT Matematik', sinav:'YKS-TYT',
+      q:'f(x) = 2x² – 3x + 1 fonksiyonunun x = 2 için değeri kaçtır?',
+      opts:['1','2','3','4','5'],
+      correct:2,
+      exp:'f(2) = 2(2)² – 3(2) + 1 = 2×4 – 6 + 1 = 8 – 6 + 1 = 3.'
+    },
+    {
+      konu:'TYT Türkçe', sinav:'YKS-TYT',
+      q:'"Yavaş yavaş akan dere taşı aşındırır." cümlesinde "yavaş yavaş" söz öbeği hangi görevdedir?',
+      opts:[
+        'Özne',
+        'Nesne',
+        'Zarf tümleci',
+        'Dolaylı tümleç',
+        'Yüklem'
+      ], correct:2,
+      exp:'"Yavaş yavaş" sözcükleri eylemin nasıl gerçekleştiğini belirtir; bu nedenle zarf tümleci görevindedir. Zarf tümleçleri, yüklemin nasıl, nerede, ne zaman gerçekleştiğini açıklar.'
+    },
+    {
+      konu:'TYT Fen', sinav:'YKS-TYT',
+      q:'Aşağıdaki elementlerden hangisi periyodik tabloda soy gaz grubunda yer alır?',
+      opts:[
+        'Klor (Cl)',
+        'Azot (N)',
+        'Argon (Ar)',
+        'Flor (F)',
+        'Oksijen (O)'
+      ], correct:2,
+      exp:'Soy gazlar (18. grup): He, Ne, Ar, Kr, Xe, Rn. Argon (Ar), soy gaz grubunda yer alır. Bu elementler çok kararlı yapıda olup normal koşullarda kimyasal tepkimelere girmezler.'
+    },
+    {
+      konu:'TYT Sosyal', sinav:'YKS-TYT',
+      q:'Aşağıdakilerden hangisi yenilenebilir enerji kaynakları arasında yer almaz?',
+      opts:[
+        'Güneş enerjisi',
+        'Rüzgar enerjisi',
+        'Doğal gaz',
+        'Jeotermal enerji',
+        'Hidroelektrik enerji'
+      ], correct:2,
+      exp:'Doğal gaz, fosil yakıt grubunda yer alan yenilenemez bir enerji kaynağıdır. Güneş, rüzgar, jeotermal ve hidroelektrik enerji ise doğadan sürekli elde edilebilen yenilenebilir kaynaklardır.'
+    },
+  ],
+
+  yds: [
+    {
+      konu:'Grammar – Tense', sinav:'YDS',
+      q:'By the time the rescue team arrived, the survivors _____ for three days without food.',
+      opts:[
+        'waited',
+        'have waited',
+        'had been waiting',
+        'were waiting',
+        'would wait'
+      ], correct:2,
+      exp:'"By the time + past simple" yapısıyla birlikte geçmişte devam eden eylemi ifade etmek için "Past Perfect Continuous" kullanılır. "Had been waiting" ifadesi, kurtarma ekibi gelmeden önce süregelen beklemeyi anlatır.'
+    },
+    {
+      konu:'Vocabulary', sinav:'YDS',
+      q:'The scientist\'s findings were so _____ that they challenged decades of established research.',
+      opts:[
+        'mundane',
+        'redundant',
+        'contentious',
+        'trivial',
+        'superfluous'
+      ], correct:2,
+      exp:'"Contentious" tartışmalı, çekişme yaratan anlamına gelir. Onlarca yıllık yerleşik araştırmayı zorlayan bulgular tartışmalı niteliktedir. "Mundane" sıradan, "redundant" gereksiz/fazla, "trivial" önemsiz, "superfluous" gereksiz demektir.'
+    },
+  ],
+};
+
+// Demo'da ve modal'da kullanılacak düz liste (tüm bankadan rastgele seçilir)
+const ALL_QUESTIONS = Object.values(QUESTION_BANK).flat();
+
+// Aktif soru seti (konu seçimine göre değişir)
+let activeQuestions = ALL_QUESTIONS;
+
+function getQuestions(subjectName) {
+  const map = {
+    'Türkçe': QUESTION_BANK.turkce,
+    'TYT Türkçe': QUESTION_BANK.turkce,
+    'Tarih': QUESTION_BANK.tarih,
+    'Coğrafya': QUESTION_BANK.cografya,
+    'Vatandaşlık': QUESTION_BANK.vatandaslik,
+    'Matematik': QUESTION_BANK.matematik,
+    'TYT Matematik': QUESTION_BANK.matematik,
+    'Sözel Bölüm': QUESTION_BANK.ales_sozel,
+    'Sayısal Bölüm': QUESTION_BANK.matematik,
+    'AYT Edebiyat': QUESTION_BANK.turkce,
+    'İngilizce': QUESTION_BANK.yds,
+  };
+  return map[subjectName] || ALL_QUESTIONS;
+}
+
+// Shuffle helper
+function shuffle(arr) {
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*i+1);[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+const QUESTIONS = ALL_QUESTIONS; // backward compat for demo card
 
 let currentQ = 0, answered = 0, correct = 0, quizTimer, quizSecs = 45;
+let quizQuestions = [];
 
 function showExam(key, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -478,7 +988,7 @@ function showExam(key, btn) {
 function renderSubjects(key) {
   const grid = document.getElementById('subjects-grid');
   grid.innerHTML = EXAMS[key].map(s => `
-    <div class="subject-card" onclick="openQuiz()">
+    <div class="subject-card" onclick="openQuiz('${s.name}')">
       <div class="subject-icon" style="background:${s.bg}">${s.icon}</div>
       <div class="subject-info">
         <div class="subject-name">${s.name}</div>
@@ -507,6 +1017,18 @@ function renderLeaderboard() {
   `).join('');
 }
 
+// Demo kartı sorusu
+const DEMO_Q = QUESTION_BANK.turkce[0];
+(function loadDemo() {
+  document.getElementById('question-text').textContent = DEMO_Q.q;
+  document.getElementById('ai-hint-text').textContent = DEMO_Q.exp;
+  const letters = ['A','B','C','D','E'];
+  document.getElementById('options').innerHTML = DEMO_Q.opts.map((o,i) => `
+    <div class="option" onclick="selectOption(this,${i},${DEMO_Q.correct})">
+      <div class="option-letter">${letters[i]}</div> ${o}
+    </div>`).join('');
+})();
+
 // Demo timer
 let demoSecs = 90;
 const timerEl = document.getElementById('timer');
@@ -518,12 +1040,12 @@ setInterval(() => {
 }, 1000);
 
 let optionAnswered = false;
-function selectOption(el, isCorrect) {
+function selectOption(el, idx, correctIdx) {
   if(optionAnswered) return;
   optionAnswered = true;
-  el.classList.add(isCorrect ? 'correct' : 'wrong');
-  if(!isCorrect) {
-    document.querySelectorAll('.option')[2].classList.add('correct');
+  el.classList.add(idx === correctIdx ? 'correct' : 'wrong');
+  if(idx !== correctIdx) {
+    document.querySelectorAll('#options .option')[correctIdx].classList.add('correct');
   }
   document.getElementById('ai-hint').style.display = 'block';
   animateStats();
@@ -545,8 +1067,12 @@ function animateStats() {
 }
 
 // Modal Quiz
-function openQuiz() {
+function openQuiz(subjectName) {
   currentQ = 0; answered = 0; correct = 0; quizSecs = 45;
+  const pool = subjectName ? getQuestions(subjectName) : ALL_QUESTIONS;
+  quizQuestions = shuffle(pool).slice(0, 10);
+  document.getElementById('modal-title').textContent =
+    (subjectName || 'Karışık') + ' – Soru 1/' + quizQuestions.length;
   document.getElementById('modal').classList.add('active');
   renderQuestion();
   startQuizTimer();
@@ -556,13 +1082,16 @@ function closeQuiz() {
   clearInterval(quizTimer);
 }
 function renderQuestion() {
-  const q = QUESTIONS[currentQ];
-  document.getElementById('modal-title').textContent = `KPSS – Soru ${currentQ+1}/5`;
-  document.getElementById('quiz-num').textContent = `Soru ${currentQ+1} / 5`;
-  document.getElementById('quiz-bar').style.width = ((currentQ+1)/5*100) + '%';
+  const q = quizQuestions[currentQ];
+  const total = quizQuestions.length;
+  const label = q.sinav ? `[${q.sinav}] ${q.konu || ''}` : 'KPSS';
+  document.getElementById('modal-title').textContent = `${label} – Soru ${currentQ+1}/${total}`;
+  document.getElementById('quiz-num').textContent = `Soru ${currentQ+1} / ${total}`;
+  document.getElementById('quiz-bar').style.width = ((currentQ+1)/total*100) + '%';
   document.getElementById('modal-question').textContent = q.q;
   document.getElementById('modal-ai').style.display = 'none';
   document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('next-btn').textContent = currentQ+1 < total ? 'Sonraki Soru →' : 'Sonucu Gör →';
   const opts = document.getElementById('modal-options');
   const letters = ['A','B','C','D','E'];
   opts.innerHTML = q.opts.map((o,i) => `
@@ -570,26 +1099,39 @@ function renderQuestion() {
       <div class="option-letter">${letters[i]}</div> ${o}
     </div>`).join('');
 }
+
 function answerQ(el, idx, correct_idx) {
   const opts = document.querySelectorAll('#modal-options .option');
   opts.forEach(o => o.onclick = null);
   el.classList.add(idx === correct_idx ? 'correct' : 'wrong');
   if(idx !== correct_idx) opts[correct_idx].classList.add('correct');
   const ai = document.getElementById('modal-ai');
-  ai.innerHTML = `<strong>🤖 AI Açıklaması:</strong> ${QUESTIONS[currentQ].exp}`;
+  ai.innerHTML = `<strong>🤖 AI Açıklaması:</strong> ${quizQuestions[currentQ].exp}`;
   ai.style.display = 'block';
   document.getElementById('next-btn').style.display = 'block';
   if(idx === correct_idx) correct++;
 }
+
 function nextQuestion() {
   currentQ++;
-  if(currentQ >= QUESTIONS.length) {
-    document.getElementById('modal-title').textContent = '🎉 Tamamlandı!';
-    document.getElementById('modal-question').textContent = `${QUESTIONS.length} sorudan ${correct} tanesini doğru cevapladın. Başarın: %${Math.round(correct/QUESTIONS.length*100)}`;
+  const total = quizQuestions.length;
+  if(currentQ >= total) {
+    const pct = Math.round(correct/total*100);
+    const emoji = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '📚';
+    document.getElementById('modal-title').textContent = `${emoji} Test Tamamlandı!`;
+    document.getElementById('modal-question').innerHTML =
+      `<strong>${total} sorudan ${correct} doğru</strong><br><br>` +
+      `Başarı oranın: <span style="color:var(--primary);font-size:1.4rem;font-weight:900">%${pct}</span><br><br>` +
+      `${pct>=80?'Mükemmel! Seviye atlamaya hazırsın.':pct>=60?'İyi gidiyorsun, biraz daha pratik yap.':'Zayıf konularını tekrar et ve yeniden dene.'}`;
     document.getElementById('modal-options').innerHTML = '';
     document.getElementById('modal-ai').style.display = 'none';
-    document.getElementById('next-btn').textContent = 'Tekrar Dene';
-    document.getElementById('next-btn').onclick = () => { currentQ=0; correct=0; renderQuestion(); };
+    document.getElementById('next-btn').textContent = '🔄 Tekrar Dene';
+    document.getElementById('next-btn').onclick = () => {
+      currentQ=0; correct=0;
+      quizQuestions = shuffle(quizQuestions);
+      document.getElementById('next-btn').onclick = nextQuestion;
+      renderQuestion();
+    };
     document.getElementById('quiz-bar').style.width = '100%';
     clearInterval(quizTimer);
     return;
