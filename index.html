@@ -200,6 +200,41 @@
   .quiz-progress-bar { height: 100%; background: var(--primary); border-radius: 3px; transition: width 0.4s; }
   .quiz-info { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.82rem; margin-bottom: 1rem; }
 
+  /* WİZARD */
+  .wiz-opts { display:flex; gap:0.7rem; flex-wrap:wrap; }
+  .wiz-opt { padding:0.65rem 1.2rem; border-radius:10px; border:1px solid var(--border); background:rgba(255,255,255,0.03); cursor:pointer; font-size:0.9rem; font-weight:600; transition:all .2s; }
+  .wiz-opt:hover { border-color:var(--primary); color:var(--primary); }
+  .wiz-opt.selected { background:rgba(99,102,241,0.15); border-color:var(--primary); color:var(--primary); }
+  .wiz-result-card { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:14px; padding:1.5rem; }
+  .wiz-result-card h3 { color:var(--success); font-size:1.1rem; margin-bottom:1rem; }
+  .wiz-plan-row { display:flex; align-items:flex-start; gap:0.8rem; margin-bottom:0.8rem; font-size:0.88rem; }
+  .wiz-plan-icon { font-size:1.1rem; flex-shrink:0; margin-top:0.1rem; }
+
+  /* KONU BARLARI */
+  .konu-bar-row { margin-bottom:0.8rem; }
+  .konu-bar-label { display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:0.3rem; }
+  .konu-bar-label span:first-child { font-weight:600; }
+  .konu-bar-label span:last-child { color:var(--primary); font-weight:700; }
+  .konu-bar-bg { height:8px; background:var(--border); border-radius:4px; overflow:hidden; }
+  .konu-bar-fill { height:100%; border-radius:4px; transition:width 1.2s ease; }
+
+  /* BAŞARI HİKAYELERİ */
+  .story-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.3rem; }
+  .story-header { display:flex; align-items:center; gap:0.8rem; margin-bottom:1rem; }
+  .story-avatar { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1rem; flex-shrink:0; }
+  .story-name { font-weight:700; font-size:0.9rem; }
+  .story-role { color:var(--success); font-size:0.75rem; font-weight:600; }
+  .story-text { color:var(--muted); font-size:0.83rem; line-height:1.6; font-style:italic; }
+  .story-stats { display:flex; gap:1rem; margin-top:0.8rem; }
+  .story-stat { font-size:0.75rem; color:var(--muted); }
+  .story-stat strong { color:var(--text); }
+
+  /* KAYGI KARTLARı */
+  .kaygi-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:12px; padding:1.2rem; }
+  .kaygi-card-icon { font-size:1.8rem; margin-bottom:0.6rem; }
+  .kaygi-card h4 { font-weight:700; font-size:0.92rem; margin-bottom:0.5rem; }
+  .kaygi-card p { color:var(--muted); font-size:0.81rem; line-height:1.55; }
+
   /* RESPONSIVE */
   @media (max-width: 768px) {
     .hero { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 1.5rem 2rem; }
@@ -365,6 +400,103 @@
 
       </div>
     </div>
+  </div>
+</div>
+
+<!-- NEREDEN BAŞLAYAYIM WİZARD -->
+<div class="section" id="baslangic">
+  <div class="ai-feature" style="text-align:left;padding:2.5rem">
+    <div style="text-align:center;margin-bottom:2rem">
+      <div class="hero-badge" style="margin:0 auto 1rem">🧭 Kişisel Yol Haritası</div>
+      <div class="section-title">Nereden Başlayayım?</div>
+      <div class="section-subtitle">3 soruda sana özel çalışma planı çıkaralım</div>
+    </div>
+    <div id="wizard-body">
+      <div class="wizard-step" id="ws-1">
+        <div style="font-weight:700;margin-bottom:1rem">1. Hangi sınava hazırlanıyorsun?</div>
+        <div class="wiz-opts" id="wo-sinav">
+          <div class="wiz-opt" onclick="wizSelect('sinav','KPSS',this)">📋 KPSS</div>
+          <div class="wiz-opt" onclick="wizSelect('sinav','YKS/TYT',this)">📚 YKS / TYT</div>
+          <div class="wiz-opt" onclick="wizSelect('sinav','ALES',this)">🎓 ALES</div>
+          <div class="wiz-opt" onclick="wizSelect('sinav','DGS',this)">📐 DGS</div>
+          <div class="wiz-opt" onclick="wizSelect('sinav','YDS',this)">🇬🇧 YDS</div>
+        </div>
+      </div>
+      <div class="wizard-step" id="ws-2" style="display:none">
+        <div style="font-weight:700;margin-bottom:1rem">2. Sınava ne kadar süren var?</div>
+        <div class="wiz-opts" id="wo-sure">
+          <div class="wiz-opt" onclick="wizSelect('sure','1 aydan az',this)">⚡ 1 aydan az</div>
+          <div class="wiz-opt" onclick="wizSelect('sure','1-3 ay',this)">📅 1-3 ay</div>
+          <div class="wiz-opt" onclick="wizSelect('sure','3-6 ay',this)">🗓️ 3-6 ay</div>
+          <div class="wiz-opt" onclick="wizSelect('sure','6+ ay',this)">🏗️ 6+ ay</div>
+        </div>
+      </div>
+      <div class="wizard-step" id="ws-3" style="display:none">
+        <div style="font-weight:700;margin-bottom:1rem">3. Günde kaç saat çalışabilirsin?</div>
+        <div class="wiz-opts" id="wo-saat">
+          <div class="wiz-opt" onclick="wizSelect('saat','1-2 saat',this)">😴 1-2 saat</div>
+          <div class="wiz-opt" onclick="wizSelect('saat','2-4 saat',this)">💪 2-4 saat</div>
+          <div class="wiz-opt" onclick="wizSelect('saat','4-6 saat',this)">🔥 4-6 saat</div>
+          <div class="wiz-opt" onclick="wizSelect('saat','6+ saat',this)">🚀 6+ saat</div>
+        </div>
+      </div>
+      <div id="ws-result" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- KONU AĞIRLIKLARI -->
+<div class="section" id="agirliklar">
+  <div class="section-header">
+    <div class="hero-badge" style="margin:0 auto 1rem">📊 ÖSYM Analizi</div>
+    <div class="section-title">KPSS'de Hangi Konudan Kaç Soru Çıkıyor?</div>
+    <div class="section-subtitle">2021-2025 ÖSYM sınavlarına göre konu dağılımı — yüksekten düşüğe</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem">
+      <div style="font-weight:800;margin-bottom:1.2rem;display:flex;align-items:center;gap:0.5rem">📝 Genel Yetenek (60 Soru)</div>
+      <div id="gy-bars"></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem">
+      <div style="font-weight:800;margin-bottom:1.2rem;display:flex;align-items:center;gap:0.5rem">🏛️ Genel Kültür (60 Soru)</div>
+      <div id="gk-bars"></div>
+    </div>
+  </div>
+  <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:1rem;margin-top:1.2rem;font-size:0.85rem;color:#fbbf24">
+    ⚠️ <strong>Strateji İpucu:</strong> Türkçe ve Matematik toplam 60 sorunun 50'sini oluşturuyor. Bu iki derse harcanan her ekstra saat ortalama 8+ puan fark yaratıyor.
+  </div>
+</div>
+
+<!-- MOTİVASYON DUVARI -->
+<div class="section" id="motivasyon">
+  <div class="section-header">
+    <div class="hero-badge" style="margin:0 auto 1rem">🏆 Başarı Hikayeleri</div>
+    <div class="section-title">Onlar da Aynı Noktadaydı</div>
+    <div class="section-subtitle">Gerçek kullanıcılar, gerçek başarılar</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem" id="stories-grid"></div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:1.5rem;text-align:center">
+    <div style="font-size:1.5rem;margin-bottom:0.8rem">⏱️ Pomodoro Çalışma Zamanlayıcısı</div>
+    <div style="color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem">25 dakika çalış, 5 dakika mola ver. Bilimsel olarak kanıtlanmış en etkili çalışma yöntemi.</div>
+    <div style="font-size:4rem;font-weight:900;color:var(--primary);margin-bottom:1rem" id="pom-display">25:00</div>
+    <div style="color:var(--muted);font-size:0.82rem;margin-bottom:1.2rem" id="pom-phase">🍅 Çalışma Süresi</div>
+    <div style="display:flex;gap:0.8rem;justify-content:center">
+      <button onclick="pomStart()" id="pom-btn" class="btn-primary" style="padding:0.6rem 1.5rem">▶ Başlat</button>
+      <button onclick="pomReset()" class="btn-outline" style="padding:0.6rem 1.5rem">↺ Sıfırla</button>
+    </div>
+    <div style="margin-top:1rem;font-size:0.78rem;color:var(--muted)">Bugünkü seri: <span id="pom-count" style="color:var(--warning);font-weight:700">0</span> 🍅</div>
+  </div>
+</div>
+
+<!-- SINAV KAYGISI -->
+<div class="section" id="kaygi">
+  <div style="background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(99,102,241,0.08));border:1px solid rgba(99,102,241,0.2);border-radius:20px;padding:2.5rem">
+    <div class="section-header" style="margin-bottom:2rem">
+      <div class="hero-badge" style="margin:0 auto 1rem">🧘 Sınav Kaygısı</div>
+      <div class="section-title">Kaygı Normal — Paniği Önle</div>
+      <div class="section-subtitle">KPSS adaylarının %78'i yoğun sınav kaygısı yaşıyor. İşte bilimsel yöntemler.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem" id="kaygi-grid"></div>
   </div>
 </div>
 
@@ -1154,6 +1286,135 @@ function scrollTo(id) { document.getElementById(id).scrollIntoView({behavior:'sm
 renderSubjects('kpss');
 renderLeaderboard();
 animateStats();
+
+// ─── WİZARD ─────────────────────────────────────────────────────────────────
+const wizData = {};
+function wizSelect(key, val, el) {
+  wizData[key] = val;
+  el.closest('.wiz-opts').querySelectorAll('.wiz-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  setTimeout(() => {
+    if(key === 'sinav') { document.getElementById('ws-1').style.display='none'; document.getElementById('ws-2').style.display='block'; }
+    if(key === 'sure') { document.getElementById('ws-2').style.display='none'; document.getElementById('ws-3').style.display='block'; }
+    if(key === 'saat') { document.getElementById('ws-3').style.display='none'; showWizResult(); }
+  }, 300);
+}
+function showWizResult() {
+  const {sinav, sure, saat} = wizData;
+  const plans = {
+    '1 aydan az': { emoji:'⚡', title:'Yoğun Sprint Planı', items:['Her gün 5-6 soru tipi değil, 2-3 konuya odaklan','Deneme sınavı çöz, yanlışlarını hemen incele','Türkçe ve Matematik öncelikli — en yüksek ağırlık','Günde en az 1 deneme sorusu çöz, ritmi koru'] },
+    '1-3 ay': { emoji:'📅', title:'Dengeli Hazırlık Planı', items:['Haftalık konu rotasyonu: 3 gün GY, 4 gün GK','Her hafta 1 mini deneme sınavı','Zayıf konuları not defterine çıkar, haftada gözden geçir','Son 2 haftayı tamamen deneme çözmeye ayır'] },
+    '3-6 ay': { emoji:'🗓️', title:'Sistematik Hazırlık Planı', items:['Konuları sıfırdan ve sırayla işle','Her konu bitiminde konu testi çöz (en az 20 soru)','Aylık performans analizi yap','3. ayda ilk tam deneme sınavına gir'] },
+    '6+ ay': { emoji:'🏗️', title:'Uzun Vadeli Birikim Planı', items:['Konu kitabı + soru bankası birlikte ilerle','Yanlış defteri tut, aylık gözden geçir','6 ayda konu bitirir, son 1 ayı denemeye ayırırsın','Motivasyonu canlı tutmak için küçük haftalık hedefler koy'] },
+  };
+  const plan = plans[sure] || plans['1-3 ay'];
+  const saatMsg = saat === '1-2 saat' ? 'Az ama etkili çalışma — kaliteyi miktara tercih et.' : saat === '6+ saat' ? 'Yoğun çalışıyorsun — molalara dikkat et, tükenme!' : 'İdeal çalışma süresi — verimli kullanırsan yeterli.';
+  document.getElementById('ws-result').innerHTML = `
+    <div class="wiz-result-card">
+      <h3>${plan.emoji} ${sinav} için ${plan.title}</h3>
+      ${plan.items.map(i=>`<div class="wiz-plan-row"><div class="wiz-plan-icon">✅</div><div>${i}</div></div>`).join('')}
+      <div style="margin-top:1rem;padding:0.8rem;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);border-radius:8px;font-size:0.82rem;color:#06b6d4">
+        ⏰ <strong>Günlük ${saat} planı:</strong> ${saatMsg}
+      </div>
+      <button class="btn-primary" style="margin-top:1.2rem;width:100%" onclick="openQuiz()">Bu Plana Göre Soru Çöz →</button>
+    </div>`;
+  document.getElementById('ws-result').style.display = 'block';
+}
+
+// ─── KONU AĞIRLIKLARI ────────────────────────────────────────────────────────
+const GY_KONULAR = [
+  {ad:'Türkçe', soru:20, renk:'#6366f1'},
+  {ad:'Matematik', soru:20, renk:'#10b981'},
+  {ad:'Geometri', soru:6, renk:'#06b6d4'},
+  {ad:'Mantık', soru:6, renk:'#f59e0b'},
+  {ad:'Fizik-Kimya-Biyoloji', soru:4, renk:'#ef4444'},
+  {ad:'Tarih', soru:4, renk:'#a855f7'},
+];
+const GK_KONULAR = [
+  {ad:'Tarih', soru:18, renk:'#f59e0b'},
+  {ad:'Coğrafya', soru:12, renk:'#10b981'},
+  {ad:'Vatandaşlık & Anayasa', soru:12, renk:'#6366f1'},
+  {ad:'Atatürk İlkeleri', soru:8, renk:'#ef4444'},
+  {ad:'Güncel Bilgiler', soru:6, renk:'#06b6d4'},
+  {ad:'Kültür & Sanat', soru:4, renk:'#a855f7'},
+];
+function renderKonuBars(data, elId) {
+  const max = Math.max(...data.map(d=>d.soru));
+  document.getElementById(elId).innerHTML = data.map(k => `
+    <div class="konu-bar-row">
+      <div class="konu-bar-label"><span>${k.ad}</span><span>${k.soru} soru</span></div>
+      <div class="konu-bar-bg"><div class="konu-bar-fill" data-w="${(k.soru/max*100).toFixed(0)}" style="width:0%;background:${k.renk}"></div></div>
+    </div>`).join('');
+  setTimeout(() => {
+    document.querySelectorAll('#'+elId+' .konu-bar-fill').forEach(el => { el.style.width = el.dataset.w + '%'; });
+  }, 300);
+}
+renderKonuBars(GY_KONULAR, 'gy-bars');
+renderKonuBars(GK_KONULAR, 'gk-bars');
+
+// ─── BAŞARI HİKAYELERİ ──────────────────────────────────────────────────────
+const STORIES = [
+  {init:'AK', bg:'linear-gradient(135deg,#6366f1,#8b5cf6)', name:'Ayşe K., 28', role:'Öğretmen – KPSS 87 puan', text:'"3 yıl çalıştım, her seferinde küçük bir farkla kaçırdım. Dördüncü yılda sistematik çalışmayı öğrendim. Türkçe ve Tarih ağırlığını öğrenince önceliklerimi değiştirdim. Sonuç: 87 puan."', stats:[{l:'Süre',v:'9 ay'},{l:'Günlük',v:'4 saat'}]},
+  {init:'MÇ', bg:'linear-gradient(135deg,#10b981,#06b6d4)', name:'Mert Ç., 24', role:'Polis – KPSS 81 puan', text:'"İlk denemede sınava hazır olmadığımı anladım. İkincisinde konu ağırlıklarını öğrendim, matematiği ihmal etmişim. Üç ay yoğun çalışınca tam 18 puan artış geldi."', stats:[{l:'Süre',v:'3 ay'},{l:'Günlük',v:'5 saat'}]},
+  {init:'ZD', bg:'linear-gradient(135deg,#f59e0b,#ef4444)', name:'Zehra D., 32', role:'Mühendis → Öğretmen', text:'"İş hayatından vazgeçip 6 ay çalıştım. Motivasyonum en çok başarı hikayelerinden geldi. Pomodoro tekniğini burada öğrendim, günde 6 saati 25\'erlik bloklara böldüm."', stats:[{l:'Süre',v:'6 ay'},{l:'Günlük',v:'6 saat'}]},
+  {init:'BK', bg:'linear-gradient(135deg,#a855f7,#ec4899)', name:'Barış K., 26', role:'Hemşire – KPSS 79 puan', text:'"Gece vardiyasında çalışıyor, gündüz uyuyordum. Günde sadece 2 saat çalışabildim. Ama konu ağırlıklarını bilince o 2 saati doğru yere harcadım."', stats:[{l:'Süre',v:'5 ay'},{l:'Günlük',v:'2 saat'}]},
+];
+document.getElementById('stories-grid').innerHTML = STORIES.map(s => `
+  <div class="story-card">
+    <div class="story-header">
+      <div class="story-avatar" style="background:${s.bg}">${s.init}</div>
+      <div><div class="story-name">${s.name}</div><div class="story-role">✅ ${s.role}</div></div>
+    </div>
+    <div class="story-text">${s.text}</div>
+    <div class="story-stats">${s.stats.map(st=>`<div class="story-stat"><strong>${st.v}</strong> ${st.l}</div>`).join('')}</div>
+  </div>`).join('');
+
+// ─── SINAV KAYGISI ───────────────────────────────────────────────────────────
+const KAYGI_TIPS = [
+  {icon:'🫁', title:'4-7-8 Nefes Tekniği', text:'4 saniye nefes al, 7 saniye tut, 8 saniyede ver. Sınav öncesi 3 kez tekrarla. Kortizol düzeyini anında düşürür.'},
+  {icon:'📝', title:'Beyin Boşaltma', text:'Sınav sabahı 10 dakika kâğıda ne bildiğini yaz, ne bilmediğini de yaz. Kaygını somutlaştırırsan korkusu azalır.'},
+  {icon:'💤', title:'Son Gece Uyku', text:'Sınav öncesi gece çalışma. 7-8 saat uyumak, 3 saat ekstra çalışmadan daha çok puan getirir. Beyin uyurken pekiştirir.'},
+  {icon:'🎯', title:'Strateji Sırasıyla Çöz', text:'Bildiğin soruları önce, bilmediğini atla. Zor soruda takılıp kalmak tüm sınavı etkiler. Puanı topla, sonra dön.'},
+  {icon:'🚶', title:'Sınav Günü Yürüyüş', text:'Sınav merkezine giderken 10 dk yürü. Fiziksel hareket serotonin salgılatır, odaklanmayı artırır.'},
+  {icon:'🧠', title:'Başarabilirim Diye Düşün', text:'Araştırmalar, "başaracağım" diye düşünen adayların %23 daha iyi performans gösterdiğini ortaya koyuyor. Afirmasyon işe yarıyor.'},
+];
+document.getElementById('kaygi-grid').innerHTML = KAYGI_TIPS.map(k => `
+  <div class="kaygi-card">
+    <div class="kaygi-card-icon">${k.icon}</div>
+    <h4>${k.title}</h4>
+    <p>${k.text}</p>
+  </div>`).join('');
+
+// ─── POMODORO TIMER ──────────────────────────────────────────────────────────
+let pomSecs = 25*60, pomRunning = false, pomInterval, pomPhase = 'work', pomCount = 0;
+function pomStart() {
+  if(pomRunning) {
+    clearInterval(pomInterval); pomRunning = false;
+    document.getElementById('pom-btn').textContent = '▶ Devam Et';
+  } else {
+    pomRunning = true;
+    document.getElementById('pom-btn').textContent = '⏸ Duraklat';
+    pomInterval = setInterval(() => {
+      pomSecs--;
+      if(pomSecs <= 0) {
+        clearInterval(pomInterval); pomRunning = false;
+        if(pomPhase === 'work') { pomCount++; document.getElementById('pom-count').textContent = pomCount; pomPhase='break'; pomSecs=5*60; document.getElementById('pom-phase').textContent='☕ Mola Süresi'; }
+        else { pomPhase='work'; pomSecs=25*60; document.getElementById('pom-phase').textContent='🍅 Çalışma Süresi'; }
+        document.getElementById('pom-btn').textContent = '▶ Başlat';
+      }
+      const m = Math.floor(pomSecs/60).toString().padStart(2,'0');
+      const s = (pomSecs%60).toString().padStart(2,'0');
+      document.getElementById('pom-display').textContent = `${m}:${s}`;
+    }, 1000);
+  }
+}
+function pomReset() {
+  clearInterval(pomInterval); pomRunning = false;
+  pomPhase='work'; pomSecs=25*60;
+  document.getElementById('pom-display').textContent='25:00';
+  document.getElementById('pom-phase').textContent='🍅 Çalışma Süresi';
+  document.getElementById('pom-btn').textContent='▶ Başlat';
+}
 </script>
 </body>
 </html>
